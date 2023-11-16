@@ -1,0 +1,20 @@
+logging:
+  level:
+    ROOT: INFO
+    web: DEBUG
+    com.andee: DEBUG
+    org.springframework: ERROR
+
+spring:
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:memory:myDb?cache=shared
+    username: sa
+    password: sa
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate:
+      ddl-auto: create-drop
+    show_sql: false
+  jackson:
+    property-naming-strategy: SNAKE_CASE
