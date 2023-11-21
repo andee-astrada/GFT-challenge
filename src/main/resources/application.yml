@@ -2,7 +2,6 @@ logging:
   level:
     ROOT: INFO
     web: DEBUG
-    com.andee: DEBUG
     org.springframework: ERROR
 
 spring:

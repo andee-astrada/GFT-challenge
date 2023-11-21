@@ -1,6 +1,7 @@
 package com.gft.challenge.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @JsonPropertyOrder({ "brandId", "startDate", "endDate", "priceList", "productId", "priority", "unitPrice", "curr" })
 public class Price {
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
@@ -29,18 +31,5 @@ public class Price {
     private String productId;
     private Integer priority;
     private BigDecimal unitPrice;
-    //TODO pasar a enum
     private Currency curr;
-
-    /*public Price(String brandId, LocalDateTime startDate, LocalDateTime endDate, String priceList,
-                 String productId, Integer priority, BigDecimal unitPrice, String curr){
-        this.brandId = brandId;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.priceList = priceList;
-        this.productId = productId;
-        this.priority = priority;
-        this.unitPrice = unitPrice;
-        this.curr = curr;
-    }*/
 }
