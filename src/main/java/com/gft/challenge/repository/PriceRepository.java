@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface PriceRepository extends JpaRepository<Price, Long> {
@@ -17,14 +16,16 @@ public interface PriceRepository extends JpaRepository<Price, Long> {
             "WHERE brandId = :brandId " +
             "AND productId = :productId " +
             "AND startDate <= :searchDate " +
-            "AND endDate >= :searchDate")
+            "AND endDate >= :searchDate " +
+            "AND priority = (" +
+            "   SELECT MAX(p2.priority) FROM price as p2" +
+            "   WHERE p2.brandId = :brandId " +
+            "   AND p2.productId = :productId" +
+            "   AND p2.startDate <= :searchDate " +
+            "   AND p2.endDate >= :searchDate ) ")
     public List<Price> findByCriteria(@Param("brandId") String brandId,
                                       @Param("productId") String productId,
                                       @Param("searchDate") LocalDateTime searchDate);
 
-    @Query(value = "SELECT p FROM price AS p " +
-            "WHERE brandId = :brandId " +
-            "AND productId = :productId ")
-    public List<Price> findByCriteria2(@Param("brandId") String brandId,
-                                      @Param("productId") String productId);
+
 }

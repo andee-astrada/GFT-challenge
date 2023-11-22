@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -52,7 +51,8 @@ public class PriceService {
     }
 
     public List<Price> searchPrice(SearchCriteria criteria) {
-        return repository.findByCriteria(criteria.getBrandId(), criteria.getProductId(), criteria.getRequestDate());
-//        return repository.findByCriteria2(criteria.getBrandId(), criteria.getProductId());
+        List<Price> searchResult =  repository.findByCriteria(criteria.getBrandId(), criteria.getProductId(), criteria.getRequestDate());
+        log.info("Search performed for brandId {} and productId {}, {} result(s)", criteria.getBrandId(), criteria.getProductId(), searchResult.size());
+        return searchResult;
     }
 }
