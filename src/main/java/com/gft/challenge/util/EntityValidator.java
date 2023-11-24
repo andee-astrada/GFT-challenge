@@ -1,7 +1,6 @@
 package com.gft.challenge.util;
 
 import com.gft.challenge.exception.FieldValidationException;
-import com.gft.challenge.model.Price;
 import com.gft.challenge.model.SearchCriteria;
 import org.apache.logging.log4j.util.Strings;
 
@@ -22,8 +21,6 @@ public class EntityValidator {
             errorMessage.append("Field request_date is required. ");
 
         if (!errorMessage.isEmpty())
-            throw new FieldValidationException("Errors occurred when validating the Job posting: " + errorMessage);
+            throw new FieldValidationException("Errors occurred when validating the search criteria: " + errorMessage);
     }
-
-
 }

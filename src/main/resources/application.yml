@@ -1,7 +1,7 @@
 logging:
   level:
     ROOT: INFO
-    web: DEBUG
+    web: INFO
     org.springframework: ERROR
 
 spring:
@@ -17,3 +17,7 @@ spring:
     show_sql: false
   jackson:
     property-naming-strategy: SNAKE_CASE
+
+initial-data-load:
+  file-path: build/resources/main/prices.csv
+

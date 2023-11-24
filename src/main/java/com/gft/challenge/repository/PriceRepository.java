@@ -1,7 +1,6 @@
 package com.gft.challenge.repository;
 
 import com.gft.challenge.model.Price;
-import com.gft.challenge.model.SearchCriteria;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

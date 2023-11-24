@@ -10,13 +10,13 @@ import com.gft.challenge.model.SearchCriteria;
 import com.gft.challenge.repository.PriceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
-
 
 @Service
 @RequiredArgsConstructor
@@ -25,8 +25,13 @@ public class PriceService {
 
     private final PriceRepository repository;
 
+    @Value("${initial-data-load.file-path}")
+    private String idlFilePath;
+
     public void initialDataLoad() {
-        File inputCsv = new File("prices.csv");
+
+        File inputCsv = new File(idlFilePath);
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss");
         CsvMapper csvMapper = new CsvMapper();
         csvMapper.enable(CsvParser.Feature.TRIM_SPACES);
@@ -46,13 +51,14 @@ public class PriceService {
         } catch(IOException e) {
             log.error("Error while trying to open initial data load file: {}", e.getMessage());
         } catch(Exception e){
-            log.error("Hubo otro error: {}", e.getMessage());
+            log.error("Error on initial data load process: {}", e.getMessage());
         }
     }
 
     public List<Price> searchPrice(SearchCriteria criteria) {
         List<Price> searchResult =  repository.findByCriteria(criteria.getBrandId(), criteria.getProductId(), criteria.getRequestDate());
-        log.info("Search performed for brandId {} and productId {}, {} result(s)", criteria.getBrandId(), criteria.getProductId(), searchResult.size());
+        log.info("Search performed for brandId: {}, productId: {}, date: {} -> {} result(s)",
+                criteria.getBrandId(), criteria.getProductId(), criteria.getRequestDate().toString(), searchResult.size());
         return searchResult;
     }
 }
