@@ -3,28 +3,28 @@
 The application allows to search for product prices, according to a specific brand and timeframe. 
 During the application start, the content of the file prices.csv is loaded on memory using SQLite.
 
-File *prices.csv* follows the format below:
+The file *prices.csv* follows the format below:
 
 | BRAND_ID | START_DATE          | END_DATE            | PRICE_LIST | PRODUCT_ID | PRIORITY | PRICE   | CURR |
 |----------|---------------------|---------------------|------------|------------|----------|---------|------|
 | 1        | 2020-06-14-00.00.00 | 2020-12-31-23.59.59 | 1          | 35455      | 0        | 35.50   | EUR  |
 
 
-## Run application
-
-    ./gradlew bootRun
-
 ## Run unit tests
 
     ./gradlew test
+
+## Run application
+
+    ./gradlew bootRun
 
 # REST API
 
 ## Search for a product
 
 The search parameters to be included in the body are:
-- BrandID: foreign key of the brand
-- ProductId: id of the product
+- brand_id: foreign key of the brand
+- product_id: id of the product
 - request_date: date and time of when we need to know the price
 
 The search will return a result if there is a price within the date sent. In case more than one result is present, only the one with the highest priority will be returned.
