@@ -1,4 +1,4 @@
-package com.gft.challenge.model;
+package com.gft.challenge.adapters.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

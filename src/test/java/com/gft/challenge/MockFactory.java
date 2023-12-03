@@ -1,11 +1,13 @@
 package com.gft.challenge;
 
-import com.gft.challenge.model.Currency;
-import com.gft.challenge.model.Price;
-import com.gft.challenge.model.SearchCriteria;
+import com.gft.challenge.adapters.rest.dto.PriceResponse;
+import com.gft.challenge.domain.model.Currency;
+import com.gft.challenge.domain.model.Price;
+import com.gft.challenge.adapters.rest.dto.SearchCriteria;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -15,8 +17,8 @@ public class MockFactory {
         Price price = new Price();
         price.setId(UUID.randomUUID());
         price.setBrandId("1");
-        price.setStartDate(LocalDateTime.now().minusDays(1));
-        price.setEndDate(LocalDateTime.now().plusDays(1));
+        price.setStartDate(LocalDateTime.now().minusDays(1).truncatedTo(ChronoUnit.SECONDS));
+        price.setEndDate(LocalDateTime.now().plusDays(1).truncatedTo(ChronoUnit.SECONDS));
         price.setPriceList("3");
         price.setProductId("35455");
         price.setPriority(1);
@@ -30,15 +32,26 @@ public class MockFactory {
         Price price = new Price();
         price.setId(UUID.randomUUID());
         price.setBrandId("1");
-        price.setStartDate(LocalDateTime.now().minusDays(1));
-        price.setEndDate(LocalDateTime.now().plusDays(1));
+        price.setStartDate(LocalDateTime.now().minusDays(1).truncatedTo(ChronoUnit.SECONDS));
+        price.setEndDate(LocalDateTime.now().plusDays(1).truncatedTo(ChronoUnit.SECONDS));
         price.setPriceList("2");
         price.setProductId("35455");
         price.setPriority(1);
-        price.setUnitPrice(BigDecimal.valueOf(39.82));
+        price.setUnitPrice(BigDecimal.valueOf(30.82));
         price.setCurr(Currency.EUR);
 
         return price;
+    }
+
+    public static PriceResponse getPriceResult(){
+        return PriceResponse.builder()
+                .productId("35455")
+                .brandId("1")
+                .priceList("3")
+                .startDate(LocalDateTime.now().minusDays(1).truncatedTo(ChronoUnit.SECONDS))
+                .endDate(LocalDateTime.now().plusDays(1).truncatedTo(ChronoUnit.SECONDS))
+                .finalPrice("EUR 35.82")
+                .build();
     }
 
     public static List<Price> getOneResultPrice(){

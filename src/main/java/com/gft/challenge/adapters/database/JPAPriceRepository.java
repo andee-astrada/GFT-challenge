@@ -1,6 +1,7 @@
-package com.gft.challenge.repository;
+package com.gft.challenge.adapters.database;
 
-import com.gft.challenge.model.Price;
+import com.gft.challenge.domain.model.Price;
+import com.gft.challenge.domain.repository.PriceRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface PriceRepository extends JpaRepository<Price, Long> {
+public interface JPAPriceRepository extends PriceRepository, JpaRepository<Price, Long> {
     @Query(value = "SELECT p FROM price AS p " +
             "WHERE brandId = :brandId " +
             "AND productId = :productId " +

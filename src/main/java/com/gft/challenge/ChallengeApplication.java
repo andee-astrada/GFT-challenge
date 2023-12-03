@@ -1,6 +1,6 @@
 package com.gft.challenge;
 
-import com.gft.challenge.service.PriceService;
+import com.gft.challenge.application.PriceService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;

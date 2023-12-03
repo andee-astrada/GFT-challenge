@@ -1,4 +1,4 @@
-package com.gft.challenge.model;
+package com.gft.challenge.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;

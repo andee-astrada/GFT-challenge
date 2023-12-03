@@ -1,13 +1,17 @@
-package com.gft.challenge.service;
+package com.gft.challenge.application;
 
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.gft.challenge.model.Price;
-import com.gft.challenge.model.SearchCriteria;
-import com.gft.challenge.repository.PriceRepository;
+import com.gft.challenge.adapters.database.JPAPriceRepository;
+import com.gft.challenge.adapters.rest.dto.PriceResponse;
+import com.gft.challenge.adapters.rest.dto.SearchCriteria;
+import com.gft.challenge.domain.model.Price;
+import com.gft.challenge.exception.DataInconsistencyException;
+import com.gft.challenge.exception.PriceNotFoundException;
+import com.gft.challenge.util.PriceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +27,7 @@ import java.util.List;
 @Slf4j
 public class PriceService {
 
-    private final PriceRepository repository;
+    private final JPAPriceRepository repository;
 
     @Value("${initial-data-load.file-path}")
     private String idlFilePath;
@@ -55,10 +59,15 @@ public class PriceService {
         }
     }
 
-    public List<Price> searchPrice(SearchCriteria criteria) {
-        List<Price> searchResult =  repository.findByCriteria(criteria.getBrandId(), criteria.getProductId(), criteria.getRequestDate());
+    public PriceResponse searchPrice(SearchCriteria criteria) throws PriceNotFoundException, DataInconsistencyException {
+        List<Price> searchResults =  repository.findByCriteria(criteria.getBrandId(), criteria.getProductId(), criteria.getRequestDate());
         log.info("Search performed for brandId: {}, productId: {}, date: {} -> {} result(s)",
-                criteria.getBrandId(), criteria.getProductId(), criteria.getRequestDate().toString(), searchResult.size());
-        return searchResult;
+                criteria.getBrandId(), criteria.getProductId(), criteria.getRequestDate().toString(), searchResults.size());
+
+        return switch (searchResults.size()) {
+                case 1 -> PriceMapper.toPriceResponse(searchResults.get(0));
+                case 0 -> throw new PriceNotFoundException();
+                default -> throw new DataInconsistencyException();
+            };
     }
 }

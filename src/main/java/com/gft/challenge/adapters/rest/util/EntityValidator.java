@@ -1,7 +1,7 @@
 package com.gft.challenge.util;
 
 import com.gft.challenge.exception.FieldValidationException;
-import com.gft.challenge.model.SearchCriteria;
+import com.gft.challenge.adapters.rest.dto.SearchCriteria;
 import org.apache.logging.log4j.util.Strings;
 
 public class EntityValidator {

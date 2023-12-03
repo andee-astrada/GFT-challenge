@@ -1,20 +1,18 @@
-package com.gft.challenge.controller;
+package com.gft.challenge.adapters.rest;
 
+import com.gft.challenge.adapters.rest.dto.SearchCriteria;
+import com.gft.challenge.application.PriceService;
+import com.gft.challenge.exception.DataInconsistencyException;
 import com.gft.challenge.exception.FieldValidationException;
-import com.gft.challenge.model.Price;
-import com.gft.challenge.model.SearchCriteria;
-import com.gft.challenge.service.PriceService;
+import com.gft.challenge.exception.PriceNotFoundException;
 import com.gft.challenge.util.EntityValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/prices")
@@ -29,18 +27,17 @@ public class PriceController {
     ) {
         try {
             EntityValidator.validate(criteria);
-            List<Price> priceResponse = service.searchPrice(criteria);
-
-            return switch (priceResponse.size()) {
-                case 1 -> new ResponseEntity<>(priceResponse.get(0), HttpStatus.OK);
-                case 0 -> new ResponseEntity<>(HttpStatus.NOT_FOUND);
-                default -> new ResponseEntity<>("Data error, contact support", HttpStatus.INTERNAL_SERVER_ERROR);
-            };
+            return ResponseEntity.ok(service.searchPrice(criteria));
+            //List<PriceResponse> priceResponse = service.searchPrice(criteria);
 
         } catch (FieldValidationException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (PriceNotFoundException e){
+            return ResponseEntity.notFound().build();
+        //} catch (DataInconsistencyException e){
+        //    return ResponseEntity.internalServerError().body(e.getMessage());
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 }

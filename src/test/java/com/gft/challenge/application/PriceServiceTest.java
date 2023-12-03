@@ -1,11 +1,15 @@
-package com.gft.challenge.service;
+package com.gft.challenge.application;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import com.gft.challenge.MockFactory;
-import com.gft.challenge.model.SearchCriteria;
-import com.gft.challenge.repository.PriceRepository;
+import com.gft.challenge.adapters.rest.dto.PriceResponse;
+import com.gft.challenge.adapters.rest.dto.SearchCriteria;
+import com.gft.challenge.adapters.database.JPAPriceRepository;
+import com.gft.challenge.exception.DataInconsistencyException;
+import com.gft.challenge.exception.PriceNotFoundException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,6 +21,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,7 +33,7 @@ class PriceServiceTest {
     private PriceService service;
 
     @Mock
-    PriceRepository repository;
+    JPAPriceRepository repository;
 
     @Test
     void initialDataLoad_ok() {
@@ -70,8 +75,9 @@ class PriceServiceTest {
     }
 
     @Test
-    void searchPrice_ok() {
+    void searchPrice_ok() throws PriceNotFoundException, DataInconsistencyException {
         SearchCriteria criteria = MockFactory.getCriteria();
+        PriceResponse expectedResult = MockFactory.getPriceResult();
 
         when(repository.findByCriteria(
                 criteria.getBrandId(),
@@ -79,7 +85,38 @@ class PriceServiceTest {
                 criteria.getRequestDate()))
                 .thenReturn(MockFactory.getOneResultPrice());
 
-        service.searchPrice(criteria);
-        verify(repository).findByCriteria(criteria.getBrandId(), criteria.getProductId(), criteria.getRequestDate());
+        PriceResponse actualResult = service.searchPrice(criteria);
+        Assertions.assertEquals(expectedResult, actualResult);
     }
+
+    @Test
+    void searchPrice_multipleResults() {
+        SearchCriteria criteria = MockFactory.getCriteria();
+
+        when(repository.findByCriteria(
+                criteria.getBrandId(),
+                criteria.getProductId(),
+                criteria.getRequestDate()))
+                .thenReturn(MockFactory.getMultipleResultPrice());
+
+        assertThrows(DataInconsistencyException.class, () -> {
+            service.searchPrice(criteria);
+        });
+    }
+
+    @Test
+    void searchPrice_notFound() {
+        SearchCriteria criteria = MockFactory.getCriteria();
+
+        when(repository.findByCriteria(
+                criteria.getBrandId(),
+                criteria.getProductId(),
+                criteria.getRequestDate()))
+                .thenReturn(MockFactory.getNoResultPrice());
+
+        assertThrows(PriceNotFoundException.class, () -> {
+            service.searchPrice(criteria);
+        });
+    }
+
 }
