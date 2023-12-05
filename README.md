@@ -47,13 +47,11 @@ The search will return a result if there is a price within the date sent. In cas
 
     {
     "brand_id": "1",
-    "start_date": "2020-06-15-00.00.00",
-    "end_date": "2020-06-15-11.00.00",
-    "price_list": "3",
+    "start_date": "2020-06-14-00.00.00",
+    "end_date": "2020-12-31-23.59.59",
+    "price_list": "1",
     "product_id": "35455",
-    "priority": 1,
-    "unit_price": 30.5,
-    "curr": "EUR"
+    "final_price": "EUR 35.5"
     }
 
 
